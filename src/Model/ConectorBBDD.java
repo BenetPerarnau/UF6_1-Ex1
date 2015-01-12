@@ -11,9 +11,6 @@ public class ConectorBBDD {
 	public static ConectorBBDD instancia; //aplicar Singleton
 	private static Connection conexion;
 	
-	public static Connection getConexion() {
-		return conexion;
-	}
 	private ConectorBBDD(){
 		
 		try {
@@ -33,7 +30,9 @@ public class ConectorBBDD {
 			System.out.println("error 2");
 		}
 	}
-
+	public static Connection getConexion() {
+		return conexion;
+	}
 	
 	public synchronized static ConectorBBDD saberEstado(){//singleton
 		//la unica forma de hacer una conexion es invocando a este metodo

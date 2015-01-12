@@ -21,7 +21,7 @@ public class Departamento {
 	
 	public void setCod(String cod) throws NotNull{
 		if(cod.length()==0){
-			throw new NotNull("El Codigo ni puede estar vacio.");
+			throw new NotNull("El Codigo no puede estar vacio al crear un Departamento.");
 		}else{
 		this.cod = cod;
 		}

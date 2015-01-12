@@ -3,10 +3,15 @@ package Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Date;
 import java.sql.SQLException;
 
 import DAO.DepartamentoDAO;
 import DAO.EmpleadoDAO;
+import Exceptions.NotNull;
+import Exceptions.Sueldo;
+import Model.Departamento;
+import Model.Empleado;
 
 /*
  * Ejercicio M03-UF6.1 -01 (ENTREGABLE, fecha límite entrega: 25 ENERO 23:50H)
@@ -31,13 +36,15 @@ public class Test {
 			try{
 				BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in));
 				op=Byte.parseByte(stdin.readLine());
+				DepartamentoDAO dep;
+				EmpleadoDAO emp;
 				switch(op){
 				case 1://"1. Crear ambas Tablas."
-					DepartamentoDAO d=new DepartamentoDAO();
-					EmpleadoDAO em=new EmpleadoDAO();
 					try {
-						d.create();//crea la tabla Departamentos
-						em.create();//crea la tabla Empleados
+						dep=new DepartamentoDAO();
+						emp=new EmpleadoDAO();
+						dep.create();//crea la tabla Departamentos
+						emp.create();//crea la tabla Empleados
 						System.out.println("Se han creado las dos tablas correctamente.");
 						
 					} catch (SQLException e) {
@@ -45,22 +52,42 @@ public class Test {
 					}
 					break;
 				case 2://"2. Insertar registros aleatorios en ambas tablas."
+					try{
+						dep=new DepartamentoDAO();
+						emp=new EmpleadoDAO();
+						dep.insert(new Departamento("",""));
+						emp.insert(new Empleado("","","","","","",new Date(12,12,12),"",(float)77.7));
+					}catch(SQLException e){
+						e.printStackTrace();
+					} catch (NotNull e1) {
+						System.out.println(e1.getMessage());
+					} catch (Sueldo e2) {
+						System.out.println(e2.getMessage());
+					}
 					break;
 				case 3:// "3. Realice las siguientes consultas."
 					do{
 					menuS();
-					op2=Byte.parseByte(stdin.readLine());
-					switch(op2){
-					case 1://"1. Datos del empleado con el máximo salario (incluyendo el nombre del departamento al que pertenece)."
-						break;
-					case 2://"2. Datos de los empleados de un determinado departamento."
-						break;
-					case 3://"3. Atràs."
-						System.out.println("Volviendo al menu principal.");
-						break;
-						default:
-							System.out.println("El valor introducido no corresponde a ninguna opción valida.");
+					try{
+						op2=Byte.parseByte(stdin.readLine());
+						switch(op2){
+						case 1://"1. Datos del empleado con el máximo salario (incluyendo el nombre del departamento al que pertenece)."
 							break;
+						case 2://"2. Datos de los empleados de un determinado departamento."
+							System.out.print("Nombre del Departamento => ");
+							String depBuscar=stdin.readLine();
+							break;
+						case 3://"3. Atràs."
+							System.out.println("Volviendo al menu principal.");
+							break;
+							default:
+								System.out.println("El valor introducido no corresponde a ninguna opción valida.");
+								break;
+						}
+					}catch(NumberFormatException e){
+						System.out.println("Se espera un valor numerico.");
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 					}while(op2!=3);
 					break;
@@ -84,17 +111,20 @@ public class Test {
 	}
 	
 	public static void menuP(){
-		System.out.println("1. Crear ambas Tablas.");
-		System.out.println("2. Insertar registros aleatorios en ambas tablas.");
-		System.out.println("3. Realice las siguientes consultas.");
-		System.out.println("4. Salir.");
+		System.out.println("------------------ Menu Principal ------------------");
+		System.out.println("| 1. Crear ambas Tablas.                           |");
+		System.out.println("| 2. Insertar registros aleatorios en ambas tablas.|");
+		System.out.println("| 3. Realice las siguientes consultas.             |");
+		System.out.println("| 4. Salir.                                        |");
+		System.out.println("----------------------------------------------------");
 		System.out.print("OP  => ");
 	}
 	public static void menuS(){
-		System.out.println("1. Datos del empleado con el máximo salario (incluyendo el nombre del departamento al que pertenece).");
-		System.out.println("2. Datos de los empleados de un determinado departamento.");
-		System.out.println("3. Atràs.");
+		System.out.println("---------------------------------------Menu Secundario--------------------------------------------------");
+		System.out.println("| 1. Datos del empleado con el máximo salario (incluyendo el nombre del departamento al que pertenece).|");
+		System.out.println("| 2. Datos de los empleados de un determinado departamento.                                            |");
+		System.out.println("| 3. Atràs.                                                                                            |");
+		System.out.println("--------------------------------------------------------------------------------------------------------");
 		System.out.print("OP  => ");
 	}
-
 }

@@ -43,7 +43,7 @@ public class Empleado {
 
 	public void setCod(String cod) throws NotNull{
 		if(cod.length()==0){
-			throw new NotNull("El Codigo ni puede estar vacio.");
+			throw new NotNull("El Codigo no puede estar vacio al crear un Empleado.");
 		}else{
 			this.cod = cod;
 		}
@@ -51,7 +51,7 @@ public class Empleado {
 
 	public void setName(String name)throws NotNull {
 		if(name.length()==0){
-			throw new NotNull("El Nombre no puede estar vacio.");
+			throw new NotNull("El Nombre del Empleado no puede estar vacio.");
 		}else{
 		this.name = name;
 		}
@@ -59,7 +59,7 @@ public class Empleado {
 
 	public void setApe(String ape)throws NotNull {
 		if(ape.length()==0){
-			throw new NotNull("El primer Apellido no puede estar vacio.");
+			throw new NotNull("El primer Apellido del Empleado no puede estar vacio.");
 		}else{
 		this.ape = ape;
 		}
@@ -67,7 +67,7 @@ public class Empleado {
 
 	public void setApe2(String ape2)throws NotNull{
 		if(ape2.length()==0){
-			throw new NotNull("El segundo Apellido no puede estar vacio.");
+			throw new NotNull("El segundo Apellido del Empleado no puede estar vacio.");
 		}else{
 		this.ape2 = ape2;
 		}
@@ -91,7 +91,7 @@ public class Empleado {
 
 	public void setSueldo(float sueldo) throws Sueldo {
 		if(sueldo<0){
-			throw new Sueldo("El sueldo no puede ser negativo.");
+			throw new Sueldo("El sueldo del Empleado no puede ser negativo.");
 		}else{
 			this.sueldo = sueldo;
 		}
