@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import DAO.DepartamentoDAO;
 import DAO.EmpleadoDAO;
@@ -48,17 +49,60 @@ public class Test {
 						System.out.println("Se han creado las dos tablas correctamente.");
 						
 					} catch (SQLException e) {
-						System.out.println("Ya has creado las tablas anteriormente.");
+						System.out.println("ERROR!!");
+						while(e!=null){
+							System.out.println("SQL State => "+e.getSQLState());
+							System.out.println("Error Code => "+e.getErrorCode());
+							System.out.println("Message => "+e.getMessage());
+							Throwable t=e.getCause();
+							while(t!=null){
+								System.out.println("Cause => "+t);
+								t=t.getCause();
+							}
+							e=e.getNextException();
+						}
 					}
 					break;
 				case 2://"2. Insertar registros aleatorios en ambas tablas."
 					try{
 						dep=new DepartamentoDAO();
+							String cod_dep="00007";
+							String name_dep="Contabilidad";
 						emp=new EmpleadoDAO();
-						dep.insert(new Departamento("",""));
-						emp.insert(new Empleado("","","","","","",new Date(12,12,12),"",(float)77.7));
+							String cod_emp="00009";
+							String name_emp="Benet";
+							String ape_emp="Perarnau";
+							String ape2_emp="Aguilar";
+							String direc_emp="C/Saragossa nº7";
+							String telef_emp="656546354";
+							Date date_emp=new Date((2015-1900),0,12);
+							String estado_emp="Ciutadano";
+							float sueldo_emp=10000;
+							String departamento="00004";
+						
+						if(dep.insert(new Departamento(cod_dep,name_dep))){
+							System.out.println("Se ha insertado en la tabla Departamentos:\n"+cod_dep+" "+name_dep);
+						}
+						
+						if(emp.insert(new Empleado(cod_emp,name_emp,ape_emp,ape2_emp,direc_emp,telef_emp,date_emp,
+													estado_emp,sueldo_emp,departamento))){
+							System.out.println("Se ha insertado en la tabla Empleados:\n"
+											+cod_emp+" "+name_emp+" "+ape_emp+" "+ape2_emp+" "+direc_emp+" "+telef_emp+""
+													+ " "+date_emp+" "+estado_emp+" "+sueldo_emp+" "+departamento);
+						}
 					}catch(SQLException e){
-						e.printStackTrace();
+						System.out.println("ERROR!!");
+						while(e!=null){
+							System.out.println("SQL State => "+e.getSQLState());
+							System.out.println("Error Code => "+e.getErrorCode());
+							System.out.println("Message => "+e.getMessage());
+							Throwable t=e.getCause();
+							while(t!=null){
+								System.out.println("Cause => "+t);
+								t=t.getCause();
+							}
+							e=e.getNextException();
+						}
 					} catch (NotNull e1) {
 						System.out.println(e1.getMessage());
 					} catch (Sueldo e2) {
@@ -72,10 +116,69 @@ public class Test {
 						op2=Byte.parseByte(stdin.readLine());
 						switch(op2){
 						case 1://"1. Datos del empleado con el máximo salario (incluyendo el nombre del departamento al que pertenece)."
+							try{
+							emp=new EmpleadoDAO();
+							dep=new DepartamentoDAO();
+							ArrayList<Empleado> array=emp.buscarEmpleSueldoMax();//retorna una lista con el empleado o empleados con el sueldo más grande.
+							System.out.println("Empleado o Empleados con el máximo Salrio:");
+							for(int i=0; i<array.size(); i++){
+								System.out.print((i+1)+") "+array.get(i).toString());
+								Departamento departamento=dep.read(array.get(i).getDepartamento());//La tabla Empleados tiene una columna que corresponde al número de departamento al que pertenece, entonces utilizamos este número para buscar en la tabla Departamentos y el nombre de éste.
+								System.out.println("Departamento de => "+departamento.getName());
+							}							
+							}catch(SQLException e){
+								System.out.println("ERROR!!");
+								while(e!=null){
+									System.out.println("SQL State => "+e.getSQLState());
+									System.out.println("Error Code => "+e.getErrorCode());
+									System.out.println("Message => "+e.getMessage());
+									Throwable t=e.getCause();
+									while(t!=null){
+										System.out.println("Cause => "+t);
+										t=t.getCause();
+									}
+									e=e.getNextException();
+								}
+							} catch (NotNull e) {
+								e.printStackTrace();
+							} catch (Sueldo e) {
+								e.printStackTrace();
+							}
 							break;
 						case 2://"2. Datos de los empleados de un determinado departamento."
 							System.out.print("Nombre del Departamento => ");
 							String depBuscar=stdin.readLine();
+							try {
+								dep=new DepartamentoDAO();
+								emp=new EmpleadoDAO();
+								String cod=dep.buscarCodDeUnNombre(depBuscar);
+								if(cod.length()!=0){
+									System.out.println("El departamento "+depBuscar+" corresponde al cod => "+cod);
+									ArrayList<Empleado>array=emp.buscarEmpleadoPorDepartamento(cod);
+									for(Empleado fila:array){
+										System.out.println(fila.toString());
+									}
+								}else{
+									System.out.println("El Departamento "+depBuscar+" no existe.");
+								}
+							} catch (SQLException e) {
+								System.out.println("ERROR!!");
+								while(e!=null){
+									System.out.println("SQL State => "+e.getSQLState());
+									System.out.println("Error Code => "+e.getErrorCode());
+									System.out.println("Message => "+e.getMessage());
+									Throwable t=e.getCause();
+									while(t!=null){
+										System.out.println("Cause => "+t);
+										t=t.getCause();
+									}
+									e=e.getNextException();
+								}
+							} catch (NotNull e) {
+								e.printStackTrace();
+							} catch (Sueldo e) {
+								e.printStackTrace();
+							}
 							break;
 						case 3://"3. Atràs."
 							System.out.println("Volviendo al menu principal.");
@@ -120,7 +223,7 @@ public class Test {
 		System.out.print("OP  => ");
 	}
 	public static void menuS(){
-		System.out.println("---------------------------------------Menu Secundario--------------------------------------------------");
+		System.out.println("-----------------------------------------Menu Secundario------------------------------------------------");
 		System.out.println("| 1. Datos del empleado con el máximo salario (incluyendo el nombre del departamento al que pertenece).|");
 		System.out.println("| 2. Datos de los empleados de un determinado departamento.                                            |");
 		System.out.println("| 3. Atràs.                                                                                            |");

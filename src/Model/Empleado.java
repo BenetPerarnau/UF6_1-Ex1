@@ -16,9 +16,12 @@ public class Empleado {
 	private Date fecha_nacimiento;
 	private String estado_civil;
 	private float sueldo;
-	
+	//
+	private String departamento;	//relación de 1 a n con la tabla Departamentos
+	//
 	public Empleado(String cod, String name, String ape, String ape2, 
-					String direc, String telef, Date fecha_nacimiento, String estado_civil, float sueldo) throws NotNull, Sueldo{
+					String direc, String telef, Date fecha_nacimiento, 
+					String estado_civil, float sueldo, String departamento) throws NotNull, Sueldo{
 		setCod(cod);
 		setName(name);
 		setApe(ape);
@@ -28,6 +31,7 @@ public class Empleado {
 		setFecha_nacimiento(fecha_nacimiento);
 		setEstado_civil(estado_civil);
 		setSueldo(sueldo);
+		setDepartamento(departamento);
 		
 	}
 
@@ -40,6 +44,7 @@ public class Empleado {
 	public Date getFecha_nacimiento() {return fecha_nacimiento;}
 	public String getEstado_civil() {return estado_civil;}
 	public float getSueldo() {return sueldo;}
+	public String getDepartamento() {return departamento;}
 
 	public void setCod(String cod) throws NotNull{
 		if(cod.length()==0){
@@ -95,6 +100,19 @@ public class Empleado {
 		}else{
 			this.sueldo = sueldo;
 		}
+	}
+
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
+	}
+
+	@Override
+	public String toString() {
+		return "Empleado [cod=" + cod + ", name=" + name + ", ape=" + ape
+				+ ", ape2=" + ape2 + ", direc=" + direc + ", telef=" + telef
+				+ ", fecha_nacimiento=" + fecha_nacimiento + ", estado_civil="
+				+ estado_civil + ", sueldo=" + sueldo + ", departamento="
+				+ departamento + "]";
 	}
 
 	

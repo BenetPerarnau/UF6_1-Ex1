@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import Exceptions.NotNull;
 import Model.ConectorBBDD;
 import Model.Departamento;
 
@@ -22,24 +24,27 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 	private static final String SQL_READ="SELECT * FROM DEPARTAMENTOS WHERE COD = ?";
 	private static final String SQL_READALL="SELECT * FROM DEPARTAMENTOS";
 	
+	private static final String SQL_BUSCAR_COD_DE_NAME="SELECT COD FROM DEPARTAMENTOS WHERE NOMBRE = ?";
+	
 	private static final ConectorBBDD cnn=ConectorBBDD.saberEstado();//aplicamos Singleton
 
 	@Override
 	public boolean create() throws SQLException{
-		PreparedStatement ps;
+		PreparedStatement ps=null;
 		try{
 			ps=cnn.getConexion().prepareStatement(SQL_CREATE);
 			if(ps.executeUpdate()>0){
 				return true;
 			}
 		}finally{
+			ps.close();
 			cnn.cerrarConexion();
 		}
 		return false;
 	}
 	@Override
 	public boolean insert(Departamento c) throws SQLException {
-		PreparedStatement ps;
+		PreparedStatement ps=null;
 		try{
 		ps=cnn.getConexion().prepareStatement(SQL_INSERT);
 		ps.setString(1, c.getCod());
@@ -48,9 +53,8 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 		if(ps.executeUpdate()>0){
 			return true;
 		}
-		}catch(Exception e){
-			e.printStackTrace();
 		}finally{
+			ps.close();
 			cnn.cerrarConexion();//cerrar conexion al final de la instrucción si o si
 		}	
 		return false;
@@ -58,16 +62,15 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 
 	@Override
 	public boolean delete(Object key) throws SQLException {
-		PreparedStatement ps;
+		PreparedStatement ps=null;
 		try{
 			ps=cnn.getConexion().prepareStatement(SQL_DELETE);
 			ps.setString(1, key.toString());
 			if(ps.executeUpdate()>0){
 				return true;
 			}
-		}catch(Exception e){
-			e.printStackTrace();
 		}finally{
+			ps.close();
 			cnn.cerrarConexion();
 		}
 		return false;
@@ -75,7 +78,7 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 
 	@Override
 	public boolean update(Departamento c) throws SQLException {
-		PreparedStatement ps;
+		PreparedStatement ps=null;
 		try{
 			ps=cnn.getConexion().prepareStatement(SQL_UPDATE);
 			ps.setString(1, c.getName());
@@ -83,19 +86,18 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 			if(ps.executeUpdate()>0){
 				return true;
 			}
-		}catch(Exception e){
-			e.printStackTrace();
 		}finally{
+			ps.close();
 			cnn.cerrarConexion();
 		}
 		return false;
 	}
 
 	@Override
-	public Departamento read(Object key) throws SQLException {
-		PreparedStatement ps;
+	public Departamento read(Object key) throws SQLException, NotNull {
+		PreparedStatement ps=null;
 		Departamento d=null;
-		ResultSet r;
+		ResultSet r=null;
 		try{
 			ps=cnn.getConexion().prepareStatement(SQL_READ);
 			ps.setString(1, key.toString());
@@ -103,19 +105,19 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 			while(r.next()){
 				d= new Departamento(r.getString(1), r.getString(2));
 			}
-		}catch(Exception e){
-			e.printStackTrace();
 		}finally{
+			r.close();
+			ps.close();
 			cnn.cerrarConexion();
 		}
 		return d;
 	}
 
 	@Override
-	public ArrayList<Departamento> readAll() throws SQLException {
-		PreparedStatement ps;
+	public ArrayList<Departamento> readAll() throws SQLException, NotNull {
+		PreparedStatement ps=null;
 		ArrayList<Departamento> array=null;
-		ResultSet r;
+		ResultSet r=null;
 		try{
 			array=new ArrayList<Departamento>();
 			ps=cnn.getConexion().prepareStatement(SQL_READALL);
@@ -123,14 +125,32 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 			while(r.next()){
 				array.add(new Departamento(r.getString(1), r.getString(2)));
 			}			
-		}catch(Exception e){
-			e.printStackTrace();
 		}finally{
+			r.close();
+			ps.close();
 			cnn.cerrarConexion();
 		}
 		return array;
 	}
 	
-
+	public String buscarCodDeUnNombre(String name_departameto) throws SQLException{
+		PreparedStatement ps=null;
+		ResultSet r=null;
+		String resultado="";
+		try{
+			ps=cnn.getConexion().prepareStatement(SQL_BUSCAR_COD_DE_NAME);
+			ps.setString(1, name_departameto);
+			r=ps.executeQuery();
+			while(r.next()){
+				resultado=r.getString(1);
+			}
+		}finally{
+			r.close();
+			ps.close();
+			cnn.cerrarConexion();
+		}
+		
+		return resultado;
+	}
 
 }
