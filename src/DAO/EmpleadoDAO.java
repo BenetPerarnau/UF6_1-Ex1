@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import Exceptions.NotNull;
 import Exceptions.Sueldo;
 import Model.ConectorBBDD;
@@ -168,7 +167,10 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 		}
 		return array;
 	}
-	
+//
+//metodos que no carga la interficie
+//	
+	//metodo que devuelve tantos empleados como haya en la tabla que tengan el sueldo mayor
 	public ArrayList<Empleado> buscarEmpleSueldoMax() throws SQLException, NotNull, Sueldo{
 		PreparedStatement ps=null;
 		ArrayList<Empleado> array=null;
@@ -189,7 +191,7 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 		}
 		return array;
 	}
-	
+		//metodo que retornará una lista de los empleados que sean de un determinado departamento.
 	public ArrayList<Empleado> buscarEmpleadoPorDepartamento(String num_dep_buscar)throws SQLException, NotNull, Sueldo{
 		PreparedStatement ps=null;
 		ArrayList<Empleado> array=null;

@@ -1,7 +1,6 @@
 package Model;
 
 import java.sql.Date;
-
 import Exceptions.NotNull;
 import Exceptions.Sueldo;
 
@@ -113,7 +112,5 @@ public class Empleado {
 				+ ", fecha_nacimiento=" + fecha_nacimiento + ", estado_civil="
 				+ estado_civil + ", sueldo=" + sueldo + ", departamento="
 				+ departamento + "]";
-	}
-
-	
+	}	
 }

@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import Exceptions.NotNull;
 import Model.ConectorBBDD;
 import Model.Departamento;
@@ -132,7 +131,10 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 		}
 		return array;
 	}
-	
+//
+//metodos que no carga la interficie
+//	
+	//metodo que retorna el codigo de un determinado nombre de departamento. 
 	public String buscarCodDeUnNombre(String name_departameto) throws SQLException{
 		PreparedStatement ps=null;
 		ResultSet r=null;
