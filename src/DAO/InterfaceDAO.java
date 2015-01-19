@@ -18,4 +18,5 @@ public interface InterfaceDAO <CualquierCosa>{
 		public boolean update(CualquierCosa c)throws SQLException;//recibe un objecto x modificado excepto la clave primaria y actualiza todo conservando la clave primaria		
 		public CualquierCosa read(Object key)throws SQLException,NotNull, Sueldo;//recibe un parametro de busca y devuelve un registro		
 		public ArrayList<CualquierCosa> readAll()throws SQLException,NotNull, Sueldo;//devuelve todos los registros de la tabla
+		public boolean exist();//saber si existe o no la tabla
 }

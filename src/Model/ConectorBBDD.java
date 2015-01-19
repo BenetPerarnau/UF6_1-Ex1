@@ -25,9 +25,18 @@ public class ConectorBBDD {
 			System.out.println("error 1");
 		
 		} catch (SQLException e) {
-			
-			e.printStackTrace();
-			System.out.println("error 2");
+			System.out.println("ERROR!!");
+			while(e!=null){
+				System.out.println("SQL State => "+e.getSQLState());
+				System.out.println("Error Code => "+e.getErrorCode());
+				System.out.println("Message => "+e.getMessage());
+				Throwable t=e.getCause();
+				while(t!=null){
+					System.out.println("Cause => "+t);
+					t=t.getCause();
+				}
+				e=e.getNextException();
+			}
 		}
 	}
 	public static Connection getConexion() {

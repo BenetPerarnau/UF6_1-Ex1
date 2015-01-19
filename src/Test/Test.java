@@ -55,10 +55,13 @@ public class Test {
 					try {
 						dep=new DepartamentoDAO();
 						emp=new EmpleadoDAO();
-						dep.create();//crea la tabla Departamentos
-						emp.create();//crea la tabla Empleados
-						System.out.println("Se han creado las dos tablas correctamente.");
-						
+						if(!dep.exist() && !emp.exist()){
+							dep.create();//crea la tabla Departamentos si no existe
+							emp.create();//crea la tabla Empleados si no existe
+							System.out.println("Se han creado las dos tablas correctamente.");
+						}else{
+							System.out.println("Las tablas Empleados y Departamentos ya existen en la BBDD.");
+						}						
 					} catch (SQLException e) {
 						System.out.println("ERROR!!");
 						while(e!=null){
@@ -77,10 +80,12 @@ public class Test {
 				case 2://"2. Insertar registros aleatorios en ambas tablas."
 					try{
 						dep=new DepartamentoDAO();
-							String cod_dep="00007";
-							String name_dep="Contabilidad";
 						emp=new EmpleadoDAO();
-							String cod_emp="00010";
+						if(dep.exist() && emp.exist()){
+							String cod_dep="00001";
+							String name_dep="Almacen";
+						
+							String cod_emp="00001";
 							String name_emp="Benet";
 							String ape_emp="Perarnau";
 							String ape2_emp="Aguilar";
@@ -89,18 +94,24 @@ public class Test {
 							Date date_emp=new Date((2015-1900),0,12);
 							String estado_emp="Ciutadano";
 							float sueldo_emp=10000;
-							String departamento="00004";
-						/*
+							String departamento="00001";
+						
 						if(dep.insert(new Departamento(cod_dep,name_dep))){
 							System.out.println("Se ha insertado en la tabla Departamentos:\n"+cod_dep+" "+name_dep);
-						}*/
-						
+						}else{
+							//salta la excepcion y es controlada en el bloque catch
+						}
 						if(emp.insert(new Empleado(cod_emp,name_emp,ape_emp,ape2_emp,direc_emp,telef_emp,date_emp,
 													estado_emp,sueldo_emp,departamento))){
 							System.out.println("Se ha insertado en la tabla Empleados:\n"
 											+cod_emp+" "+name_emp+" "+ape_emp+" "+ape2_emp+" "+direc_emp+" "+telef_emp+""
 													+ " "+date_emp+" "+estado_emp+" "+sueldo_emp+" "+departamento);
+						}else{
+							//salta la excepcion y es controlada en el bloque catch
 						}
+					}else{
+						System.out.println("No se pueden insertar reg. No existen las tablas Empleados y Departamentos");
+					}
 					}catch(SQLException e){
 						System.out.println("ERROR!!");
 						while(e!=null){
@@ -131,13 +142,21 @@ public class Test {
 							try{
 							emp=new EmpleadoDAO();
 							dep=new DepartamentoDAO();
-							ArrayList<Empleado> array=emp.buscarEmpleSueldoMax();//retorna una lista con el empleado o empleados con el sueldo más grande.
-							System.out.println("Empleado o Empleados con el máximo Salrio:");
-							for(int i=0; i<array.size(); i++){
-								System.out.print((i+1)+") "+array.get(i).toString());
-								Departamento departamento=dep.read(array.get(i).getDepartamento());//La tabla Empleados tiene una columna que corresponde al número de departamento al que pertenece, entonces utilizamos este número para buscar en la tabla Departamentos y el nombre de éste.
-								System.out.println("Departamento de => "+departamento.getName());
-							}							
+							if(dep.exist()){
+								ArrayList<Empleado> array=emp.buscarEmpleSueldoMax();//retorna una lista con el empleado o empleados con el sueldo más grande.
+								if(array.size()>0){
+									System.out.println("Empleado o Empleados con el máximo Salrio:");
+									for(int i=0; i<array.size(); i++){
+										System.out.print((i+1)+") "+array.get(i).toString());
+										Departamento departamento=dep.read(array.get(i).getDepartamento());//La tabla Empleados tiene una columna que corresponde al número de departamento al que pertenece, entonces utilizamos este número para buscar en la tabla Departamentos y el nombre de éste.
+										System.out.println("Departamento de => "+departamento.getName());
+									}
+								}else{
+									System.out.println("En la tabla Empleados no existe ningun registro.");
+								}
+							}else{
+								System.out.println("No existe la tabla Departamentos y por lo tanto no pueden existir Empleados!\nPorque cada empleado hace referencia al cod de un registro de la tabla Departamentos.");
+							}
 							}catch(SQLException e){
 								System.out.println("ERROR!!");
 								while(e!=null){
@@ -158,20 +177,29 @@ public class Test {
 							}
 							break;
 						case 2://"2. Datos de los empleados de un determinado departamento."
-							System.out.print("Nombre del Departamento => ");
-							String depBuscar=stdin.readLine();
 							try {
 								dep=new DepartamentoDAO();
-								emp=new EmpleadoDAO();
-								String cod=dep.buscarCodDeUnNombre(depBuscar);
-								if(cod.length()!=0){
-									System.out.println("El departamento "+depBuscar+" corresponde al cod => "+cod);
-									ArrayList<Empleado>array=emp.buscarEmpleadoPorDepartamento(cod);
-									for(Empleado fila:array){
-										System.out.println(fila.toString());
+								if(dep.exist()){
+									System.out.print("Nombre del Departamento => ");
+									String depBuscar=stdin.readLine();
+									emp=new EmpleadoDAO();
+									String cod=dep.buscarCodDeUnNombre(depBuscar);
+									if(cod.length()!=0){
+										System.out.println("El departamento de "+depBuscar+" existe en la BBDD y corresponde al cod => "+cod);
+										ArrayList<Empleado>array=emp.buscarEmpleadoPorDepartamento(cod);
+										if(array.size()>0){
+											System.out.println("Empleado/s que corresponden a este departamento: ");
+											for(Empleado fila:array){
+												System.out.println(fila.toString());
+											}
+										}else{
+											System.out.println("No hay empleados en el departamento de "+depBuscar);
+										}
+									}else{
+										System.out.println("El Departamento de "+depBuscar+" no existe.");
 									}
 								}else{
-									System.out.println("El Departamento "+depBuscar+" no existe.");
+									System.out.println("No existe la tabla Departamentos.");
 								}
 							} catch (SQLException e) {
 								System.out.println("ERROR!!");
@@ -209,16 +237,24 @@ public class Test {
 				case 4://4. Dar de Baja Empleado
 					try {
 						emp=new EmpleadoDAO();
-						//mostramos todos los empleados para asi ver los cod para poder borrar
+						if(emp.exist()){
+						//mostramos todos los empleados para asi ver los cod para poder borrar mas comodamente
 						ArrayList<Empleado> array=emp.readAll();
-						for(Empleado fila:array){
-							System.out.println(fila.toString());
-						}
-						System.out.print("Cod del empleado a borrar => ");
-						if(emp.delete(stdin.readLine())){
-							System.out.println("El usuario ha sido borrado Correctamente. ");
+						if(array.size()>0){
+							for(Empleado fila:array){
+								System.out.println(fila.toString());
+							}
+							System.out.print("Cod del empleado a borrar => ");
+							if(emp.delete(stdin.readLine())){
+								System.out.println("El usuario ha sido borrado Correctamente. ");
+							}else{
+								System.out.println("No existe ningun empleado con este codigo.");
+							}
 						}else{
-							System.out.println("No existe ningun empleado con este codigo.");
+							System.out.println("No existen registros en la tabla Empleados pada poder borrar.");
+						}
+						}else{
+							System.out.println("La tabla Empleados no existe.");
 						}
 					} catch (SQLException e) {
 						System.out.println("ERROR!!");
@@ -241,47 +277,53 @@ public class Test {
 					break;
 				case 5://5. Dar de Alta Empleado
 					try{
-					System.out.println("Formulario nuevo Empleado:");
-					System.out.print("Cod => ");
-					String newCod=stdin.readLine();
-					System.out.print("Nombre => ");
-					String newName=stdin.readLine();
-					System.out.print("Apellido => ");
-					String newApe=stdin.readLine();
-					System.out.print("Apellido 2 => ");
-					String newApe2=stdin.readLine();
-					System.out.print("Direccion => ");
-					String newDirec=stdin.readLine();
-					System.out.print("Telefono => ");
-					String newTelef=stdin.readLine();
+					emp=new EmpleadoDAO();
+					dep=new DepartamentoDAO();
+					if(emp.exist() && dep.exist()){
+						System.out.println("Formulario nuevo Empleado:");
+						System.out.print("Cod => ");
+						String newCod=stdin.readLine();
+						System.out.print("Nombre => ");
+						String newName=stdin.readLine();
+						System.out.print("Apellido => ");
+						String newApe=stdin.readLine();
+						System.out.print("Apellido 2 => ");
+						String newApe2=stdin.readLine();
+						System.out.print("Direccion => ");
+						String newDirec=stdin.readLine();
+						System.out.print("Telefono => ");
+						String newTelef=stdin.readLine();
 					
-					System.out.print("Fecha de nacimiento 'dd/mm/yyyy' => ");
+						System.out.print("Fecha de nacimiento 'dd/mm/yyyy' => ");
 					/*
 					SimpleDateFormat formatoDeFecha = new SimpleDateFormat("yyyy/MM/dd");
 					Date newFecha=(Date)formatoDeFecha.parse(stdin.readLine());
 					// ERROR => no consigo pasar de Java.util.Date a Java.sql.Date
 					*/
 					//alternativa:
-					Date newFecha=null;
-					String [] aux=stdin.readLine().split("/");
-						 newFecha=new Date((Integer.parseInt(aux[0])-1900),
+						Date newFecha=null;
+						String [] aux=stdin.readLine().split("/");
+							newFecha=new Date((Integer.parseInt(aux[0])-1900),
 												Integer.parseInt(aux[1]),
 												Integer.parseInt(aux[2]));
+					//
 					
+							System.out.print("Estado Civil => ");
+							String newEstado=stdin.readLine();
+							System.out.print("Sueldo => ");
+							float newSueldo=Float.parseFloat(stdin.readLine());
+							System.out.print("Cod Departamento => ");
+							String newCodDep=stdin.readLine();
 					
-					System.out.print("Estado Civil => ");
-					String newEstado=stdin.readLine();
-					System.out.print("Sueldo => ");
-					float newSueldo=Float.parseFloat(stdin.readLine());
-					System.out.print("Cod Departamento => ");
-					String newCodDep=stdin.readLine();
-					emp=new EmpleadoDAO();
-					if(emp.insert(new Empleado(newCod,newName,newApe,newApe2,newDirec,newTelef,newFecha,
-							newEstado,newSueldo,newCodDep))){
-						System.out.println("Empleado insertado en la BBDD correctamente.");
+							if(emp.insert(new Empleado(newCod,newName,newApe,newApe2,newDirec,newTelef,newFecha,
+									newEstado,newSueldo,newCodDep))){
+								System.out.println("Empleado insertado en la BBDD correctamente.");
+							}else{
+								//no se ha podido insertar! se encargan los bloques catch de mostrar el pq no
+							}
 					}else{
-						//se encargan los bloques catch de mostrar el pq no
-					}					
+						System.out.println("No se puede Dar de alta porque no existen las tablas.");
+					}
 					}catch(NumberFormatException e){
 						System.out.println("Error al dar formato numerico al String => "+e.getMessage());
 					}catch(PatternSyntaxException e){

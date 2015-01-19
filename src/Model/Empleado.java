@@ -16,7 +16,7 @@ public class Empleado {
 	private String estado_civil;
 	private float sueldo;
 	//
-	private String departamento;	//relación de 1 a n con la tabla Departamentos
+	private String departamento;//relación de 1 a n con la tabla Departamentos(1 'Departamento' n 'Empleados')
 	//
 	public Empleado(String cod, String name, String ape, String ape2, 
 					String direc, String telef, Date fecha_nacimiento, 

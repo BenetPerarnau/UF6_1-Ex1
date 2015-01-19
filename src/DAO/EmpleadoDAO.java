@@ -48,7 +48,7 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 				return true;
 			}
 		}finally{
-			ps.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		
@@ -74,7 +74,7 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 			}
 			
 		}finally{
-			ps.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		
@@ -91,7 +91,7 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 				return true;
 			}
 		}finally{
-			ps.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		return false;
@@ -116,7 +116,7 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 				return true;
 			}
 		}finally{
-			ps.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		return false;
@@ -137,8 +137,8 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 			}
 			
 		}finally{
-			r.close();
-			ps.close();
+			if(r!=null)r.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		return em;
@@ -161,11 +161,32 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 			}
 			
 		}finally{
-			r.close();
-			ps.close();
+			if(r!=null)r.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		return array;
+	}
+	public boolean exist(){
+		PreparedStatement ps=null;
+		ResultSet r=null;
+		boolean existe=false;
+		try{
+			ps=cnn.getConexion().prepareStatement(SQL_READALL);
+			r=ps.executeQuery();			
+			existe=true;//si llega ha esta linea es pq ha encontrado la tabla en la bbdd si no pasara al bloque catch retornando false
+			
+		} catch (SQLException e) {
+			return existe;
+		}finally{
+				try {
+					if(ps!=null)ps.close();
+					if(r!=null)r.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}		
+		}
+		return existe;
 	}
 //
 //metodos que no carga la interficie
@@ -185,8 +206,8 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 			}
 			
 		}finally{
-			r.close();
-			ps.close();
+			if(r!=null)r.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		return array;
@@ -209,8 +230,8 @@ public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 			}
 			
 		}finally{
-			r.close();
-			ps.close();
+			if(r!=null)r.close();
+			if(ps!=null)ps.close();
 			cnn.cerrarConexion();
 		}
 		return array;
