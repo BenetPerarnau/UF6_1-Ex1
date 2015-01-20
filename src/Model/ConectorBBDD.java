@@ -19,13 +19,10 @@ public class ConectorBBDD {
 			
 			conexion=DriverManager.getConnection("jdbc:mysql://localhost:8889/uf6_1-Ex1","root","root");
 			
-		} catch (ClassNotFoundException e) {
-			
-			e.printStackTrace();
-			System.out.println("error 1");
-		
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();		
 		} catch (SQLException e) {
-			System.out.println("ERROR!!");
+			System.out.println("ERROR SQL Class Conector!!");
 			while(e!=null){
 				System.out.println("SQL State => "+e.getSQLState());
 				System.out.println("Error Code => "+e.getErrorCode());
@@ -46,14 +43,12 @@ public class ConectorBBDD {
 	public synchronized static ConectorBBDD saberEstado(){//singleton
 		//la unica forma de hacer una conexion es invocando a este metodo
 		if(instancia==null){
-			instancia=new ConectorBBDD();
-			
+			instancia=new ConectorBBDD();		
 		}
 		return instancia;
 	}
 	public static void cerrarConexion(){
-		if(instancia!=null)
-			instancia=null;
+		if(instancia!=null) instancia=null;
 	}
 
 }

@@ -11,12 +11,13 @@ import Model.Departamento;
 public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 	
 	private static final String SQL_CREATE="CREATE TABLE DEPARTAMENTOS "
-										+ "(COD VARCHAR(5), PRIMARY KEY(COD), NOMBRE VARCHAR(20) NOT NULL)";
+										+ "(COD VARCHAR(5) PRIMARY KEY, "
+										+ "NOMBRE VARCHAR(20) NOT NULL)";
 	private static final String SQL_INSERT="INSERT INTO DEPARTAMENTOS "
 										+ "(COD, NOMBRE) "
 										+ "VALUES(?,?)";
 	private static final String SQL_DELETE="DELETE FROM DEPARTAMENTOS "
-					 				 + "WHERE COD = ?";
+					 				 	+ "WHERE COD = ?";
 	private static final String SQL_UPDATE="UPDATE DEPARTAMENTOS "
 				     					+ "NOMBRE = ? "
 				     					+ "WHERE COD = ?";
@@ -137,6 +138,7 @@ public class DepartamentoDAO implements InterfaceDAO<Departamento> {
 		boolean existe=false;
 		try{
 			ps=cnn.getConexion().prepareStatement(SQL_READALL);
+			if(ps==null){return existe;}
 			r=ps.executeQuery();			
 			existe=true;//si llega ha esta linea es pq ha encontrado la tabla en la bbdd si no pasara al bloque catch retornando false
 			

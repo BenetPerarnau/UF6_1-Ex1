@@ -19,6 +19,12 @@ public class Departamento {
 	public String getCod() {return cod;}
 	public String getName() {return name;}
 	
+	@Override
+	public String toString() {
+		return "Departamento [cod=" + cod + ", name=" + name + "]";
+	}
+
+
 	public void setCod(String cod) throws NotNull{
 		if(cod.length()==0){
 			throw new NotNull("El Codigo no puede estar vacio al crear un Departamento.");

@@ -11,27 +11,32 @@ import Model.Empleado;
 
 public class EmpleadoDAO implements InterfaceDAO<Empleado>{
 	private static final String SQL_CREATE="CREATE TABLE EMPLEADOS"
-			+ " (COD VARCHAR(5), PRIMARY KEY(COD), NOMBRE VARCHAR(20) NOT NULL, APELLIDO VARCHAR(20) NOT NULL,"
-			+ " APELLIDO2 VARCHAR(20) NOT NULL, DIRECCION VARCHAR(50), TELEFONO VARCHAR(9), F_NACIMIENTO DATE, "
-			+ "ESTADO_CIVIL VARCHAR(20), SUELDO FLOAT NOT NULL, DEPARTAMENTO VARCHAR(5), "
-			+ "FOREIGN KEY (DEPARTAMENTO) REFERENCES DEPARTAMENTOS (COD))";
-	
+										+ " (COD VARCHAR(5) PRIMARY KEY,"
+										+ " NOMBRE VARCHAR(20) NOT NULL,"
+										+ " APELLIDO VARCHAR(20) NOT NULL,"
+										+ " APELLIDO2 VARCHAR(20) NOT NULL,"
+										+ " DIRECCION VARCHAR(50),"
+										+ " TELEFONO VARCHAR(9),"
+										+ " F_NACIMIENTO DATE,"
+										+ " ESTADO_CIVIL VARCHAR(20),"
+										+ " SUELDO FLOAT(6,2) NOT NULL CHECK (SUELDO>=0),"
+										+ " DEPARTAMENTO VARCHAR(5),"
+										+ " FOREIGN KEY (DEPARTAMENTO) REFERENCES DEPARTAMENTOS (COD))";
 	private static final String SQL_INSERT="INSERT INTO EMPLEADOS "
-											+ "(COD, NOMBRE, APELLIDO, APELLIDO2, DIRECCION, TELEFONO, "
-											+ "F_NACIMIENTO, ESTADO_CIVIL, SUELDO, DEPARTAMENTO) "
-											+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
-	private static final String SQL_DELETE="DELETE FROM EMPLEADOS "
-			 								+ "WHERE COD = ?";
+										+ "(COD, NOMBRE, APELLIDO, APELLIDO2, DIRECCION, TELEFONO, "
+										+ "F_NACIMIENTO, ESTADO_CIVIL, SUELDO, DEPARTAMENTO) "
+										+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
+	private static final String SQL_DELETE="DELETE FROM EMPLEADOS WHERE COD = ?";
 	private static final String SQL_UPDATE="UPDATE EMPLEADOS "
-											+ "NOMBRE = ?, APELLIDO = ?, APELLIDO2 = ?, DIRECCION = ?, TELEFONO = ?, "
-											+ "F_NACIMIENTO = ?, ESTADO_CIVIL = ?, SUELDO = ?, DEPARTAMENTO = ? "
-											+ "WHERE COD = ?";
+										+ "NOMBRE = ?, APELLIDO = ?, APELLIDO2 = ?, DIRECCION = ?, TELEFONO = ?, "
+										+ "F_NACIMIENTO = ?, ESTADO_CIVIL = ?, SUELDO = ?, DEPARTAMENTO = ? "
+										+ "WHERE COD = ?";
 	private static final String SQL_READ="SELECT * FROM EMPLEADOS WHERE COD = ?";
 	private static final String SQL_READALL="SELECT * FROM EMPLEADOS";
 	
-	//    select nombre from tabla order by posicion asc
-	//Esta es la más rápida y eficiente, pero tiene un inconveniente. 
-	//Imaginemos que dos tienen el valor máximo. Sólo mostraría el primero.
+	//    *select nombre from tabla order by posicion asc*
+	//Esta es la más rapida y eficiente, pero tiene un inconveniente. 
+	//Imaginemos que dos tienen el valor máximo. Solo mostraria el primero.
 	private static final String SQL_Empleado_Sueldo_Mayor="SELECT * FROM EMPLEADOS "
 														+ "WHERE SUELDO = (SELECT MAX(SUELDO) FROM EMPLEADOS)";
 	private static final String SQL_EMPLEADOS_SEGUN_DEPARTAMENTO="SELECT * FROM EMPLEADOS "
